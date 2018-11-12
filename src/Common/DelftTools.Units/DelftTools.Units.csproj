@@ -80,7 +80,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PostSharp, Version=3.1.75.9, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\..\Downloads\FMSDispatch\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -104,6 +104,7 @@
     <Compile Include="Unit.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="DelftTools.snk" />
     <None Include="packages.config" />
     <None Include="Uml\ProcessLibrary.cd" />
@@ -147,10 +148,10 @@
   <PropertyGroup>
     <UsePostSharp>true</UsePostSharp>
   </PropertyGroup>
-  <Import Project="..\..\..\build\DeltaShell.targets" />
-  <Import Project="..\..\..\..\..\..\Downloads\FMSDispatch\packages\PostSharp.3.1.75\tools\PostSharp.targets" Condition="Exists('..\..\..\..\..\..\Downloads\FMSDispatch\packages\PostSharp.3.1.75\tools\PostSharp.targets')" />
+  <Import Project="$(SolutionDir)build\DeltaShell.targets" />
+  <Import Project="$(SolutionDir)packages\PostSharp.3.1.75\tools\PostSharp.targets" Condition="Exists('$(SolutionDir)packages\PostSharp.3.1.75\tools\PostSharp.targets')" />
   <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
-    <Error Condition="!Exists('..\..\..\..\..\..\Downloads\FMSDispatch\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
-    <Error Condition="Exists('..\..\..\..\..\..\Downloads\FMSDispatch\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
+    <Error Condition="!Exists('$(SolutionDir)packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
+    <Error Condition="Exists('$(SolutionDir)packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
   </Target>
 </Project>

@@ -2,13 +2,15 @@ using System;
 using System.IO;
 using System.Linq;
 using GeoAPI.CoordinateSystems;
+using GeoAPI.Extensions.CoordinateSystems;
+using OSGeo.OSR;
 
 namespace SharpMap.Extensions.CoordinateSystems
 {
     /// <summary>
     /// See http://www.gdal.org/ogr/classOGRSpatialReference.html for the documentation of all SpatialReference methods.
     /// </summary>
-    public class OgrCoordinateSystem : OSGeo.OSR.SpatialReference, ICoordinateSystem
+    public class OgrCoordinateSystem : OSGeo.OSR.SpatialReference, IProj4CoordinateSystem
     {
         /// <summary>
         /// supported coordinate system ids (geographic and projected)
@@ -52,6 +54,25 @@ namespace SharpMap.Extensions.CoordinateSystems
             get
             {
                 return GetAttrValue(IsGeographic() == 1 ? "GEOGCS" : "PROJCS", 0);
+            }
+        }
+
+        bool IProj4CoordinateSystem.IsProjected
+        {
+            get { return IsProjected() == 1; }
+        }
+
+        bool IProj4CoordinateSystem.IsGeographic
+        {
+            get { return IsProjected() == 0; }
+        }
+
+        string IProj4CoordinateSystem.PROJ4 {
+            get
+            {
+                string res;
+                ExportToProj4(out res);
+                return res;
             }
         }
 

@@ -20,8 +20,11 @@ namespace SharpMap.Editors.Interactors
 {
     public class LineStringInteractor : FeatureInteractor
     {
-        protected internal TrackerFeature AllTracker { get; set; }
-
+#if DEBUG
+        public TrackerFeature AllTracker { get; protected set; }
+#else
+        protected TrackerFeature AllTracker { get; set; }
+#endif
         static private Bitmap trackerSmallStart;
         static private Bitmap trackerSmallEnd;
         static private Bitmap trackerSmall;

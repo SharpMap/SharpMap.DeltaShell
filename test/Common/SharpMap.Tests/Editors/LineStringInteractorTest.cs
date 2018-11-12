@@ -188,7 +188,9 @@ namespace SharpMap.Tests.Editors
             var lineStringEditor = new LineStringInteractor(new VectorLayer { Map = mapControl.Map }, sampleFeature, GetStyle(), null);
             
             var trackerFeature = lineStringEditor.GetTrackerAtCoordinate(new Coordinate(15, 0));
+#if DEBUG
             Assert.That(trackerFeature == lineStringEditor.AllTracker, Is.True);
+#endif
             lineStringEditor.Start();
             lineStringEditor.MoveTracker(trackerFeature, 0.0, 5.0);
             

@@ -13,15 +13,15 @@ namespace SharpMap.UI.Forms
         private readonly List<TreeNode> pcsNodes = new List<TreeNode>();
         
         private readonly Timer timerFilterChanged;
-        private IList<ICoordinateSystem> supportedCoordinateSystems;
+        private IList<IProj4CoordinateSystem> supportedCoordinateSystems;
 
         public event Action<ICoordinateSystem> SelectedCoordinateSystemChanged;
 
-        private ICoordinateSystem selectedCoordinateSystem;
+        private IProj4CoordinateSystem selectedCoordinateSystem;
 
-        public ICoordinateSystem SelectedCoordinateSystem
+        public IProj4CoordinateSystem SelectedCoordinateSystem
         {
-            get { return treeViewProjections.Nodes.Count > 0 ? treeViewProjections.SelectedNode.Tag as ICoordinateSystem : null; }
+            get { return treeViewProjections.Nodes.Count > 0 ? treeViewProjections.SelectedNode.Tag as IProj4CoordinateSystem : null; }
             set
             {
                 selectedCoordinateSystem = value;
@@ -48,7 +48,7 @@ namespace SharpMap.UI.Forms
             treeViewProjections.SelectedNode = node;
         }
 
-        public SelectCoordinateSystemDialog(IList<ICoordinateSystem> supportedCoordinateSystems)
+        public SelectCoordinateSystemDialog(IList<IProj4CoordinateSystem> supportedCoordinateSystems)
         {
             this.supportedCoordinateSystems = supportedCoordinateSystems;
             

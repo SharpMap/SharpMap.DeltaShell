@@ -2,7 +2,7 @@
 
 namespace SharpMap.Extensions.Tests.CoordinateSystems
 {
-    [TestFixture]
+    [TestFixture, Ignore("Empty")]
     public class OgrCoordinateTransformationTest
     {
          

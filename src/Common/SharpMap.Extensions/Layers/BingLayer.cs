@@ -4,10 +4,11 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net;
 using BruTile;
 using BruTile.Cache;
-using BruTile.PreDefined;
+using BruTile.Predefined;
 using BruTile.Web;
 using DelftTools.Utils;
 using GeoAPI.Geometries;
@@ -21,7 +22,7 @@ namespace SharpMap.Extensions.Layers
     public class BingLayer : Layer
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(BingLayer)); 
-        private ITileSchema schema;
+        private ITileSource _tileSource;
 
         public static string CacheLocation
         {
@@ -36,11 +37,6 @@ namespace SharpMap.Extensions.Layers
 
         public BingLayer()
         {
-            // Here we use a tile schema that is defined in code. There are a few predefined 
-            // tile schemas in the BruTile.dll. In the usual case the schema should be parsed
-            // from a tile service description.
-            schema = new BingSchema();
-
             if (cache == null)
             {
                 //no cache so mem
@@ -50,14 +46,29 @@ namespace SharpMap.Extensions.Layers
                 }
                 else
                 {
-                    cache = new FileCache(CacheLocation, "jpg");
+                    cache = new FileCache(CacheLocation, "png");
                 }
             }
         }
         
         public override Envelope Envelope
         {
-            get { return new Envelope(schema.Extent.MinX, schema.Extent.MaxX, schema.Extent.MinY, schema.Extent.MaxY); }
+            get { return new Envelope(Schema.Extent.MinX, Schema.Extent.MaxX, Schema.Extent.MinY, Schema.Extent.MaxY); }
+        }
+
+        public string BingApiKey { get; set; } = string.Empty;
+
+        private ITileSource TileSource
+        {
+            get
+            {
+                return _tileSource ?? (_tileSource = KnownTileSources.Create(KnownTileSource.BingHybrid, BingApiKey));
+            }
+        }
+
+        private ITileSchema Schema
+        {
+            get { return TileSource.Schema; }
         }
 
         /// <summary>
@@ -69,58 +80,62 @@ namespace SharpMap.Extensions.Layers
         {
             MapTransform mapTransform = new MapTransform(new PointF((float)Map.Center.X, (float)Map.Center.Y), (float)Map.PixelSize, Map.Image.Width, Map.Image.Height);
 
-            int level = BruTile.Utilities.GetNearestLevel(schema.Resolutions, Map.PixelSize);
+            _tileSource = KnownTileSources.Create(KnownTileSource.BingHybrid, BingApiKey);
+            string level = BruTile.Utilities.GetNearestLevel(_tileSource.Schema.Resolutions, Map.PixelSize);
             
-            IList<TileInfo> tileInfos = schema.GetTilesInView(mapTransform.Extent, level);
+            IEnumerable<TileInfo> tileInfos = Schema.GetTileInfos(mapTransform.Extent, level);
 
-            IRequest requestBuilder = new BingRequest(BingRequest.UrlBing, string.Empty, MapType.Hybrid);
+            //new BingRequest(BingRequest.UrlBing, string.Empty, BingMapType.Hybrid);
 
-            var graphics = Graphics.FromImage(Image);
-            // log.DebugFormat("Downloading tiles:");
-            foreach (var tileInfo in tileInfos)
+            using (var graphics = Graphics.FromImage(Image))
             {
-                var bytes = cache.Find(tileInfo.Index);
+                // log.DebugFormat("Downloading tiles:");
+                foreach (var tileInfo in tileInfos)
+                {
+                    var bytes = cache.Find(tileInfo.Index);
 
-                if (bytes == default(byte[]))
-                {
-                    try
+                    if (bytes == default(byte[]))
                     {
-                        // log.DebugFormat("row: {0}, column: {1}, level: {2}", tileInfo.Index.Row, tileInfo.Index.Col, tileInfo.Index.Level);
-                        var url = requestBuilder.GetUri(tileInfo);
-                        bytes = RequestHelper.FetchImage(url);
-                        cache.Add(tileInfo.Index, bytes);
+                        try
+                        {
+                            // log.DebugFormat("row: {0}, column: {1}, level: {2}", tileInfo.Index.Row, tileInfo.Index.Col, tileInfo.Index.Level);
+                            bytes = _tileSource.GetTile(tileInfo);
+                            cache.Add(tileInfo.Index, bytes);
+                        }
+                        catch (WebException e)
+                        {
+                            log.Error("Can't fetch tiles from the server", e);
+                        }
                     }
-                    catch (WebException e)
+                    else
                     {
-                        log.Error("Can't fetch tiles from the server", e);
+                        //log.DebugFormat("row: {0}, column: {1}, level: {2} (cached)", tileInfo.Index.Row, tileInfo.Index.Col, tileInfo.Index.Level);
                     }
-                }
-                else
-                {
-                    //log.DebugFormat("row: {0}, column: {1}, level: {2} (cached)", tileInfo.Index.Row, tileInfo.Index.Col, tileInfo.Index.Level);
-                }
 
-                if (bytes == null) continue;
-                using (var bitmap = new Bitmap(new MemoryStream(bytes)))
-                {
-                    var rectangle = mapTransform.WorldToMap(tileInfo.Extent.MinX, tileInfo.Extent.MinY,
-                                                            tileInfo.Extent.MaxX, tileInfo.Extent.MaxY);
-                    DrawTile(schema, graphics, bitmap, rectangle);
+                    if (bytes == null) continue;
+                    using (var bitmap = new Bitmap(new MemoryStream(bytes)))
+                    {
+                        var rectangle = mapTransform.WorldToMap(tileInfo.Extent.MinX, tileInfo.Extent.MinY,
+                            tileInfo.Extent.MaxX, tileInfo.Extent.MaxY);
+                        DrawTile(Schema, level, graphics, bitmap, rectangle);
+                    }
                 }
             }
         }
 
-        private static RectangleF DrawTile(ITileSchema schema, Graphics graphics, Bitmap bitmap, RectangleF extent)
+        private static RectangleF DrawTile(ITileSchema schema, string levelId, Graphics graphics, Bitmap bitmap, RectangleF extent)
         {
             // For drawing on WinForms there are two things to take into account 
             // to prevent seams between tiles.
-            // 1) The WrapMode should be set to TileFlipXY. This is related 
-            //    to how pixels are rounded by GDI+
-            ImageAttributes imageAttributes = new ImageAttributes();
-            imageAttributes.SetWrapMode(WrapMode.TileFlipXY);
-            // 2) The rectangle should be rounded to actual pixels. 
-            Rectangle roundedExtent = RoundToPixel(extent);
-            graphics.DrawImage(bitmap, roundedExtent, 0, 0, schema.Width, schema.Height, GraphicsUnit.Pixel, imageAttributes);
+            using (var imageAttributes = new ImageAttributes())
+            {
+                // 1) The WrapMode should be set to TileFlipXY. This is related 
+                //    to how pixels are rounded by GDI+
+                imageAttributes.SetWrapMode(WrapMode.TileFlipXY);
+                // 2) The rectangle should be rounded to actual pixels. 
+                Rectangle roundedExtent = RoundToPixel(extent);
+                graphics.DrawImage(bitmap, roundedExtent, 0, 0, schema.GetTileWidth(levelId), schema.GetTileHeight(levelId), GraphicsUnit.Pixel, imageAttributes);
+            }
             return extent;
         }
 
@@ -134,31 +149,5 @@ namespace SharpMap.Extensions.Layers
                 (int)(Math.Round(dest.Right) - Math.Round(dest.Left)),
                 (int)(Math.Round(dest.Bottom) - Math.Round(dest.Top)));
         }
-
-        private ITileSchema CreateTileSchema()
-        {
-            var resolutions = new[] { 
-                156543.033900000, 78271.516950000, 39135.758475000, 19567.879237500, 9783.939618750, 
-                4891.969809375, 2445.984904688, 1222.992452344, 611.496226172, 305.748113086, 
-                152.874056543, 76.437028271, 38.218514136, 19.109257068, 9.554628534, 4.777314267,
-                2.388657133, 1.194328567, 0.597164283};
-
-            var tileSchema = new TileSchema {Name = "OpenStreetMap"};
-            foreach (float resolution in resolutions)
-            {
-                tileSchema.Resolutions.Add(resolution);
-            }
-
-            tileSchema.OriginX = -20037508.342789;
-            tileSchema.OriginY = 20037508.342789;
-            tileSchema.Axis = AxisDirection.InvertedY;
-            tileSchema.Extent = new Extent(-20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789);
-            tileSchema.Height = 256;
-            tileSchema.Width = 256;
-            tileSchema.Format = "png";
-            tileSchema.Srs = "EPSG:900913";
-            return tileSchema;
-        }
-
     }
 }

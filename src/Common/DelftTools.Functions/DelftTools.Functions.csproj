@@ -76,13 +76,16 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\log4net.2.0.8\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="PostSharp, Version=3.1.75.9, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\..\Downloads\FMSDispatch\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
+      <HintPath>..\..\..\packages\PostSharp.3.1.75\lib\net20\PostSharp.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ValidationAspects.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -90,10 +93,6 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\ValidationAspects.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binding\EditableBindingListRow.cs" />
@@ -255,9 +254,9 @@
     </CustomCommands>
   </PropertyGroup>
   <Import Project="..\..\..\build\DeltaShell.targets" />
-  <Import Project="..\..\..\..\..\..\Downloads\FMSDispatch\packages\PostSharp.3.1.75\tools\PostSharp.targets" Condition="Exists('..\..\..\..\..\..\Downloads\FMSDispatch\packages\PostSharp.3.1.75\tools\PostSharp.targets')" />
+  <Import Project="$(SolutionDir)packages\PostSharp.3.1.75\tools\PostSharp.targets" Condition="Exists('$(SolutionDir)packages\PostSharp.3.1.75\tools\PostSharp.targets')" />
   <Target Name="EnsurePostSharpImported" BeforeTargets="BeforeBuild" Condition="'$(PostSharp30Imported)' == ''">
-    <Error Condition="!Exists('..\..\..\..\..\..\Downloads\FMSDispatch\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
-    <Error Condition="Exists('..\..\..\..\..\..\Downloads\FMSDispatch\packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
+    <Error Condition="!Exists('$(SolutionDir)packages\PostSharp.3.1.75\tools\PostSharp.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://www.postsharp.net/links/nuget-restore." />
+    <Error Condition="Exists('$(SolutionDir)PostSharp.3.1.75\tools\PostSharp.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://www.postsharp.net/links/nuget-restore." />
   </Target>
 </Project>

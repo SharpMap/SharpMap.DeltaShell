@@ -51,8 +51,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
+/*
 [assembly: InternalsVisibleTo("SharpMap.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100650b40aeb964d2"+
     "4c346bd308cd61d32b761e7f083e7110fb4c8ab35f14fe8b87e049cd41c1984d7206dcc226ed88"+
 "556b84ad8d61dc986c6043dc96915e6b6a8eb5d6d52520852c6175e422bc93c0fdbc1a3aeb290e"+
 "937432bded9704e9a01cd08a53a5d5a01b54cb98452b8141b90d9b76a2076cfc554265f6f79770"+
 "6132fbd0", AllInternalsVisible = true)]
+ */

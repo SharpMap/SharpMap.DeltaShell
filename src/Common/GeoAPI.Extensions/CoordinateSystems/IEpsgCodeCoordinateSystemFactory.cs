@@ -10,6 +10,9 @@ namespace GeoAPI.Extensions.CoordinateSystems
     public interface IProj4CoordinateSystem : ICoordinateSystem
     {
         string PROJ4 { get; }
+
+        bool IsGeographic { get; }
+        bool IsProjected { get; }
     }
 
 }
