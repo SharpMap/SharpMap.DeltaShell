@@ -228,7 +228,7 @@ namespace SharpMap.Extensions.Data.Providers
         /// <returns>number of features</returns>
         public virtual int GetFeatureCount()
         {
-            return ogrLayer.GetFeatureCount(1);
+            return (int)ogrLayer.GetFeatureCount(1);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace SharpMap.Extensions.Data.Providers
 
             try
             {
-                int featureCount = ogrLayer.GetFeatureCount(1);
+                int featureCount = (int)ogrLayer.GetFeatureCount(1);
                 for (int i = 0; i < featureCount; i++)
                 {
                     using (var ogrFeature = ogrLayer.GetNextFeature())
@@ -619,7 +619,7 @@ namespace SharpMap.Extensions.Data.Providers
                     int day;
                     int hour;
                     int minute;
-                    int second;
+                    float second;
                     int TZflag;
                     ogrFeature.GetFieldAsDateTime(iField, out year, out month, out day, out hour, out minute, out second,
                                                   out TZflag);
@@ -629,7 +629,7 @@ namespace SharpMap.Extensions.Data.Providers
                     }
                     else
                     {
-                        feature[iField] = new DateTime(year, month, day, hour, minute, second);
+                        feature[iField] = new DateTime(year, month, day, hour, minute, (int)second);
                     }
 
                 }

@@ -4,9 +4,21 @@ using GeoAPI.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
 using OSGeo.OSR;
+using SharpMap.CoordinateSystems;
 
 namespace SharpMap.Extensions.CoordinateSystems
 {
+    public class OgrCoordinateTransformationFactory : ICoordinateTransformationFactory
+    {
+        public ICoordinateTransformation CreateFromCoordinateSystems(ICoordinateSystem sourceCS, ICoordinateSystem targetCS)
+        {
+            if (sourceCS is OgrCoordinateSystem oSourceCS && targetCS is OgrCoordinateSystem oTargetCS)
+            {
+                return new OgrCoordinateTransformation(oSourceCS, oTargetCS);
+            }
+            throw new ArgumentException();
+        }
+    }
     public class OgrCoordinateTransformation : CoordinateTransformation, ICoordinateTransformation
     {
         public OgrCoordinateTransformation(OgrCoordinateSystem src, OgrCoordinateSystem dst)

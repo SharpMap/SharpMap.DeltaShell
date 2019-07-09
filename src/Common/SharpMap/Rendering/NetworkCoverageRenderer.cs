@@ -15,7 +15,7 @@ namespace SharpMap.Rendering
     /// <summary>
     /// Base class for NetworkCoverageLocationRenderer and NetworkCoverageSegmentRenderer
     /// </summary>
-    public abstract class NetworkCoverageRenderer:IFeatureRenderer
+    public abstract class NetworkCoverageRenderer : IFeatureRenderer
     {
         protected INetworkCoverage GetRenderedCoverage(INetworkCoverage networkCoverage, DateTime time)
         {

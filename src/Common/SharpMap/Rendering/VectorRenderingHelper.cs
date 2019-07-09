@@ -97,7 +97,29 @@ namespace SharpMap.Rendering
 			}
 		}
 
-	    private const float Limit = 1E6f; //todo: verify if this limit makes any sense
+        /// <summary>
+        /// Renders a LineString to the map.
+        /// </summary>
+        /// <param name="g">Graphics reference</param>
+        /// <param name="line">LineString to render</param>
+        /// <param name="pen">Pen style used for rendering</param>
+        /// <param name="map">Map reference</param>
+        public static void DrawBezierString(System.Drawing.Graphics g, ILineString line, System.Drawing.Pen pen, IMap map)
+        {
+            if (line.Coordinates.Length > 1)
+            {
+                var gp = new GraphicsPath();
+                var points = Transform.TransformToImage(line, map);
+
+                if (points.Length > 0)
+                {
+                    gp.AddBeziers(points);
+                    g.DrawPath(pen, gp);
+                }
+            }
+        }
+
+        private const float Limit = 1E6f; //todo: verify if this limit makes any sense
 	    private static readonly RectangleF ClipEnvelope = new RectangleF(-Limit, Limit, 2*Limit, -2*Limit);
 
 	    private static PointF[] ClipValues(PointF[] points)

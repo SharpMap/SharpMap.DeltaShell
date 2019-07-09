@@ -315,6 +315,7 @@ namespace SharpMap.Layers
                     foreach (var feature in features)
                     {
                         var g = GeometryTransform.TransformGeometry(feature.Geometry, CoordinateTransformation.MathTransform);
+                        if (g == null) continue;
 
                         if (!g.EnvelopeInternal.Intersects(geometry.EnvelopeInternal))
                         {
@@ -936,13 +937,14 @@ namespace SharpMap.Layers
                     else
                     {
                         var envelope = new Envelope();
-                        var count = DataSource.GetFeatureCount();
+                        var fs = DataSource.Features;
+                        int count = fs.Count;
                         for (int i = 0; i < count; i++)
                         {
-                            var g = DataSource.GetGeometryByID(i);
+                            var g = ((IFeature)fs[i]).Geometry;
                             g = GeometryTransform.TransformGeometry(g, CoordinateTransformation.MathTransform);
-
-                            envelope.ExpandToInclude(g.EnvelopeInternal);
+                            if (g != null)
+                                envelope.ExpandToInclude(g.EnvelopeInternal);
                         }
 
                         return envelope;

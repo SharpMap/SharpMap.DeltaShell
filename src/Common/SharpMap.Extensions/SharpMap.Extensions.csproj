@@ -54,7 +54,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <NoWarn>1591</NoWarn>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -101,9 +101,11 @@
     <Reference Include="BruTile.MbTiles, Version=0.18.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\BruTile.Desktop.0.18.1\lib\net40\BruTile.MbTiles.dll</HintPath>
     </Reference>
-    <Reference Include="gdal_csharp, Version=1.0.3444.41343, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\Common\SharpMap.Extensions\gdal_csharp.dll</HintPath>
+    <Reference Include="gdalconst_csharp, Version=1.0.7092.38054, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\MineDispatch\packages\GDAL.2.4.1\lib\net40\gdalconst_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gdal_csharp, Version=1.0.7092.38053, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\MineDispatch\packages\GDAL.2.4.1\lib\net40\gdal_csharp.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\GeoAPI.Core.1.7.5\lib\net40-client\GeoAPI.dll</HintPath>
@@ -124,13 +126,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\Nini.dll</HintPath>
     </Reference>
-    <Reference Include="ogr_csharp, Version=1.0.3444.41343, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\Common\SharpMap.Extensions\ogr_csharp.dll</HintPath>
+    <Reference Include="ogr_csharp, Version=1.0.7092.38053, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\MineDispatch\packages\GDAL.2.4.1\lib\net40\ogr_csharp.dll</HintPath>
     </Reference>
-    <Reference Include="osr_csharp, Version=1.0.3444.41343, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\Common\SharpMap.Extensions\osr_csharp.dll</HintPath>
+    <Reference Include="osr_csharp, Version=1.0.7092.38053, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\MineDispatch\packages\GDAL.2.4.1\lib\net40\osr_csharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -160,6 +160,7 @@
     <Compile Include="Data\Providers\LdbFile.cs" />
     <Compile Include="Data\Providers\NtsProvider.cs" />
     <Compile Include="Data\Providers\OgrFeatureProvider.cs" />
+    <Compile Include="GdalConfiguration.cs" />
     <Compile Include="Layers\BingLayer.cs" />
     <Compile Include="Layers\OpenStreetMapLayer.cs" />
     <Compile Include="Layers\GdalRasterLayer.cs">
@@ -236,7 +237,9 @@
     <None Include="packages.config" />
     <None Include="Uml\SharpMap.Extensions.cd" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="GdalConfiguration.vb" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="CoordinateSystems\cs.ids.txt" />
   </ItemGroup>

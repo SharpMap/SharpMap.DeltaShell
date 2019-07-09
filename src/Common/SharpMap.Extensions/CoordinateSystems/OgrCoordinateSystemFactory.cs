@@ -4,10 +4,11 @@ using System.IO;
 using System.Linq;
 using GeoAPI.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
+using GeoAPI.Extensions.CoordinateSystems;
 
 namespace SharpMap.Extensions.CoordinateSystems
 {
-    public class OgrCoordinateSystemFactory : ICoordinateSystemFactory
+    public class OgrCoordinateSystemFactory : ICoordinateSystemFactory, ISridCoordinateSystemFactory
     {
         public ICoordinateSystem CreateFromEPSG(int code)
         {
@@ -108,6 +109,11 @@ namespace SharpMap.Extensions.CoordinateSystems
         public IVerticalDatum CreateVerticalDatum(string name, DatumType datumType)
         {
             throw new NotImplementedException();
+        }
+
+        public IProj4CoordinateSystem CreateFromSRID(long srid)
+        {
+            return OgrCoordinateSystem.SupportedCoordinateSystems.FirstOrDefault(t => t.AuthorityCode == srid);
         }
     }
 }

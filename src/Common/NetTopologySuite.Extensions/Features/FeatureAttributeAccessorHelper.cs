@@ -88,6 +88,8 @@ namespace NetTopologySuite.Extensions.Features
             {
                 if (noDataValue == null)
                 {
+                    if (typeof(T) == typeof(string))
+                        return (T) Activator.CreateInstance(typeof(T),new object[] { new char[0] });
                     return (T) Activator.CreateInstance(typeof (T));
                 }
 

@@ -284,8 +284,8 @@ namespace SharpMap.Styles
                                 Height = shapeSize,
                                 ColorFillSolid = (fill is SolidBrush) ? ((SolidBrush) fill).Color : Color.Transparent,
                                 BorderShow = EnableOutline,
-                                BorderWidth = outline.Width,
-                                BorderColor = outline.Color
+                                BorderWidth = outline?.Width ?? 1,
+                                BorderColor = outline?.Color ?? Color.Black
                             };
 
             ((IShape)shape).ShapeType = Shape;
@@ -313,7 +313,7 @@ namespace SharpMap.Styles
             }
             else if ((GeometryType == typeof(ILineString)) || (GeometryType == typeof(IMultiLineString)))
             {
-                g.DrawLine(Outline, 2, 8, 14, 8);
+                if (Outline != null) g.DrawLine(Outline, 2, 8, 14, 8);
                 g.DrawLine(Line, 2, 8, 14, 8);
             }
             else

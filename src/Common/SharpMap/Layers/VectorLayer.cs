@@ -229,8 +229,8 @@ namespace SharpMap.Layers
             {
                 if (DataSource.GetFeatureCount() > 0)
                 {
-                    IFeature feature = DataSource.GetFeature(0);
-                    IGeometry geometry = feature.Geometry;
+                    var feature = (IFeature)DataSource.Features[0];
+                    IGeometry geometry = feature?.Geometry;
                     if (geometry != null)
                     {
                         // hack set interface of geometry as VectorStyle.GeometryType
@@ -360,13 +360,13 @@ namespace SharpMap.Layers
                             (currentVectorStyle != null && currentVectorStyle.Enabled &&
                              currentVectorStyle.EnableOutline))
                         {
-                            switch (currentGeometry.GeometryType)
+                            switch (currentGeometry.OgcGeometryType)
                             {
-                                case "LineString":
+                                case OgcGeometryType.LineString:
                                     VectorRenderingHelper.DrawLineString(g, currentGeometry as ILineString,
                                                                          currentVectorStyle.Outline, map);
                                     break;
-                                case "MultiLineString":
+                                case OgcGeometryType.MultiLineString:
                                     VectorRenderingHelper.DrawMultiLineString(g, currentGeometry as IMultiLineString,
                                                                               currentVectorStyle.Outline, map);
                                     break;

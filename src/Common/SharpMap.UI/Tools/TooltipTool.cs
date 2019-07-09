@@ -1,8 +1,6 @@
-﻿using System.Windows.Forms;
-using GeoAPI.Extensions.Feature;
+using System.Windows.Forms;
 using GeoAPI.Geometries;
 using log4net;
-using SharpMap.Layers;
 using ToolTip=System.Windows.Forms.ToolTip;
 
 namespace SharpMap.UI.Tools
@@ -11,19 +9,28 @@ namespace SharpMap.UI.Tools
     {
         private static readonly ILog log = LogManager.GetLogger(typeof (ToolTipTool));
 
-        ToolTip toolTip;
-        private string toolTipText;
-
-        private Layer layer;
-        private IFeature feature;
+        private readonly ToolTip _toolTip;
+        private string _toolTipText;
 
         public ToolTipTool()
         {
             Name = "ToolTipTool";
-            toolTip = new ToolTip();
-            toolTip.ReshowDelay = 500;
-            toolTip.InitialDelay = 500;
-            toolTip.AutoPopDelay = 2500;
+            _toolTip = new ToolTip();
+            _toolTip.ReshowDelay = 1500;
+            _toolTip.InitialDelay = 500;
+            _toolTip.IsBalloon = true;
+            _toolTip.AutoPopDelay = 3000;
+        }
+
+        public bool IsBalloon
+        {
+            get => _toolTip.IsBalloon;
+            set => _toolTip.IsBalloon = true;
+        }
+
+        public override bool AlwaysActive
+        {
+            get => true;
         }
 
         public override bool IsActive
@@ -34,26 +41,30 @@ namespace SharpMap.UI.Tools
 
         public override void OnMouseMove(Coordinate worldPosition, MouseEventArgs e)
         {
-/*
-            feature = null;
-
-            feature = FindNearestFeature(worldPosition, 5, out layer);
+            // Allow for 3px offset
+            float limit = 3f * (float)Map.PixelWidth;
+            var feature = FindNearestFeature(worldPosition, limit, out var layer, t => t.IsSelectable);
 
             if (feature == null || layer == null)
             {
-                toolTip.Active = false;
+                _toolTip.Active = false;
                 return;
             }
 
             string message = "Feature: " + feature + "\nLayer: " + layer.Name;
 
-            if (toolTipText != message)
+            if (_toolTipText != message)
             {
-                toolTip.SetToolTip((Control) MapControl, toolTipText);
-                toolTip.Active = false;
-                toolTip.Active = true;
+                _toolTipText = message;
+
+                if (log.IsDebugEnabled)
+                    log.Debug(_toolTipText);
+
+                _toolTip.SetToolTip((Control) MapControl, _toolTipText);
+                _toolTip.Active = false;
+                _toolTip.Active = true;
             }
-*/
+
         }
     }
 }

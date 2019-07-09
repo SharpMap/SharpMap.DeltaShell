@@ -508,6 +508,7 @@ namespace SharpMap.UI.Forms
         }
 
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 
         public IEnumerable<IFeature> SelectedFeatures
         {

@@ -1,4 +1,4 @@
-﻿using GeoAPI.CoordinateSystems;
+using GeoAPI.CoordinateSystems;
 using GeoAPI.Extensions.CoordinateSystems;
 
 namespace SharpMap.CoordinateSystems
