@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,6 +17,7 @@ using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Styles;
 using System.Windows.Forms;
+using SharpMap.CoordinateSystems.Transformations;
 
 namespace SharpMap.Editors
 {
@@ -181,8 +182,10 @@ namespace SharpMap.Editors
                 }
 
                 var boundingBox = MapHelper.GetEnvelope(worldPos, size.X, size.Y);
-
-                if (trackerFeature.Geometry.EnvelopeInternal.Intersects(boundingBox))
+                var geom = (IPoint)trackerFeature.Geometry;
+                if (Layer.CoordinateTransformation != null)
+                    geom = GeometryTransform.TransformPoint(geom, Layer.CoordinateTransformation.MathTransform); 
+                if (boundingBox.Intersects(geom.Coordinate))
                     return trackerFeature;
             }
             return null;

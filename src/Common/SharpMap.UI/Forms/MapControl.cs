@@ -878,7 +878,9 @@ namespace SharpMap.UI.Forms
 
         protected override void OnMouseHover(EventArgs e)
         {
-            WithActiveToolsDo(tool => tool.OnMouseHover(null, e));
+            var screenPt = PointToClient(MousePosition);
+            var worldPosition = map.ImageToWorld(screenPt);
+            WithActiveToolsDo(tool => tool.OnMouseHover(worldPosition, e));
             base.OnMouseHover(e);
         }
 

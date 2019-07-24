@@ -281,7 +281,7 @@ namespace SharpMap.UI.Tools
                     isBusy = false;
                     return;
                 }
-                dragSource = StartDragging(worldPosition, featureProvider.GetFeature(dragIndex));
+                dragSource = StartDragging(worldPosition, /*featureProvider.GetFeature(dragIndex) ??*/ (IFeature)feature.Clone());
                 if (dragSource == null)
                 {
                     isBusy = false;
@@ -340,6 +340,13 @@ namespace SharpMap.UI.Tools
             }     
             SnapResult = null;
             var selectedFeatureInteractor = MapControl.SelectTool.SelectedFeatureInteractors[0];
+            if (selectedFeatureInteractor.Layer.CoordinateTransformation != null)
+            {
+                var ct = selectedFeatureInteractor.Layer.CoordinateTransformation;
+                var ctRev = Map.CoordinateTransformationFactory.CreateFromCoordinateSystems(ct.TargetCS, ct.SourceCS);
+                worldPosition = ctRev.MathTransform.Transform(worldPosition);
+            }
+
             if (dragSource != null)
             {
                 SnapResult =

@@ -138,6 +138,9 @@ namespace SharpMap.UI.Tools
 
         public override void Render(Graphics graphics, Map map)
         {
+            if (trackers.Count == 0)
+                return;
+
             // Render the selectionLayer and trackingLayer
             // Bypass ILayer.Render and call OnRender directly; this is more efficient
             foreach (var tracker in trackers)
@@ -151,6 +154,7 @@ namespace SharpMap.UI.Tools
                 }
             }
 
+            trackingLayer.CoordinateTransformation = null; //trackers[0].FeatureInteractor.Layer.CoordinateTransformation;
             SynchronizeTrackers();
             trackingLayer.OnRender(graphics, map);
         }

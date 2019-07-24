@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 using GeoAPI.Geometries;
 using log4net;
@@ -41,8 +42,14 @@ namespace SharpMap.UI.Tools
 
         public override void OnMouseMove(Coordinate worldPosition, MouseEventArgs e)
         {
+            _toolTip.Active = false;
+            base.OnMouseMove(worldPosition, e);
+        }
+
+        public override void OnMouseHover(Coordinate worldPosition, EventArgs e)
+        {
             // Allow for 3px offset
-            float limit = 3f * (float)Map.PixelWidth;
+            float limit = 12f * (float)Map.PixelWidth;
             var feature = FindNearestFeature(worldPosition, limit, out var layer, t => t.IsSelectable);
 
             if (feature == null || layer == null)
@@ -53,18 +60,21 @@ namespace SharpMap.UI.Tools
 
             string message = "Feature: " + feature + "\nLayer: " + layer.Name;
 
-            if (_toolTipText != message)
-            {
-                _toolTipText = message;
+            //if (_toolTipText != message)
+            //{
+            //    _toolTipText = message;
 
                 if (log.IsDebugEnabled)
                     log.Debug(_toolTipText);
 
-                _toolTip.SetToolTip((Control) MapControl, _toolTipText);
-                _toolTip.Active = false;
+                _toolTip.SetToolTip((Control)MapControl, message);
+                //_toolTip.Active = false;
                 _toolTip.Active = true;
-            }
+            //}
 
+            base.OnMouseHover(worldPosition, e);
         }
+
+        //public override OnM
     }
 }

@@ -122,22 +122,22 @@ namespace SharpMap.Extensions.CoordinateSystems
             {
                 var xy = DimSource == 2
                     ? Transform(new[] { coordinate.X, coordinate.Y })
-                    : Transform(new[] { coordinate.X, coordinate.Y, coordinate.Y });
+                    : Transform(new[] { coordinate.X, coordinate.Y, coordinate.Z });
 
 
                 return DimTarget == 2 ?
-                    new Coordinate(xy[0], xy[1]) : new Coordinate(xy[0], xy[1], xy[3]);
+                    new Coordinate(xy[0], xy[1]) : new Coordinate(xy[0], xy[1], xy[2]);
             }
 
             public Coordinate Transform(Coordinate coordinate)
             {
                 var xy = DimSource == 2
                     ? Transform(new[] {coordinate.X, coordinate.Y})
-                    : Transform(new[] {coordinate.X, coordinate.Y, coordinate.Y});
+                    : Transform(new[] {coordinate.X, coordinate.Y, coordinate.Z});
 
 
                 return DimTarget == 2 ?
-                    new Coordinate(xy[0], xy[1]) : new Coordinate(xy[0], xy[1], xy[3]);
+                    new Coordinate(xy[0], xy[1]) : new Coordinate(xy[0], xy[1], xy[2]);
             }
 
             public IList<double[]> TransformList(IList<double[]> points)
