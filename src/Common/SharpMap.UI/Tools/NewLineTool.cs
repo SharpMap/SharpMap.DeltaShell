@@ -109,6 +109,7 @@ namespace SharpMap.UI.Tools
         // layer that enables fast updates during creation of a new line.
         private VectorLayer newLineLayer;
         private readonly Collection<IGeometry> newLineGeometry = new Collection<IGeometry>();
+
         private void AddDrawingLayer()
         {
             newLineLayer = new VectorLayer(VectorLayer)
@@ -174,6 +175,9 @@ namespace SharpMap.UI.Tools
 
             TemporalEnd = false;
 
+            if (newLineLayer?.CoordinateTransformation != null)
+                worldPosition = newLineLayer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPosition);
+
             if ((!adding))//|| (AutoCurve))
             {
                 StartNewLine(Snap(worldPosition).Location);
@@ -199,6 +203,9 @@ namespace SharpMap.UI.Tools
             {
                 return;
             }
+
+            if (VectorLayer.CoordinateTransformation != null)
+                worldPosition = VectorLayer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPosition);
 
             // Execute snapping rules and show snap result, even when not in adding mode.
             if ((!adding) && (null != MapControl))
@@ -297,6 +304,9 @@ namespace SharpMap.UI.Tools
             {
                 return;
             }
+
+            if (newLineLayer?.CoordinateTransformation != null)
+                worldPosition = newLineLayer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPosition);
 
             SnapResult snapResult = MapControl.SnapTool.ExecuteLayerSnapRules(VectorLayer, null, adding ? newLineGeometry[0] : null,
                                                             worldPosition,
