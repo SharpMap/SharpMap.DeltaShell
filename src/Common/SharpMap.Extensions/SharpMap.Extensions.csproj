@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -102,10 +102,10 @@
       <HintPath>..\..\..\packages\BruTile.Desktop.0.18.1\lib\net40\BruTile.MbTiles.dll</HintPath>
     </Reference>
     <Reference Include="gdalconst_csharp, Version=1.0.7092.38054, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\MineDispatch\packages\GDAL.2.4.1\lib\net40\gdalconst_csharp.dll</HintPath>
+      <HintPath>..\..\..\packages\GDAL.2.4.1\lib\net40\gdalconst_csharp.dll</HintPath>
     </Reference>
     <Reference Include="gdal_csharp, Version=1.0.7092.38053, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\MineDispatch\packages\GDAL.2.4.1\lib\net40\gdal_csharp.dll</HintPath>
+      <HintPath>..\..\..\packages\GDAL.2.4.1\lib\net40\gdal_csharp.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\GeoAPI.Core.1.7.5\lib\net40-client\GeoAPI.dll</HintPath>
@@ -127,10 +127,10 @@
       <HintPath>..\..\..\lib\Nini.dll</HintPath>
     </Reference>
     <Reference Include="ogr_csharp, Version=1.0.7092.38053, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\MineDispatch\packages\GDAL.2.4.1\lib\net40\ogr_csharp.dll</HintPath>
+      <HintPath>..\..\..\packages\GDAL.2.4.1\lib\net40\ogr_csharp.dll</HintPath>
     </Reference>
     <Reference Include="osr_csharp, Version=1.0.7092.38053, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\MineDispatch\packages\GDAL.2.4.1\lib\net40\osr_csharp.dll</HintPath>
+      <HintPath>..\..\..\packages\GDAL.2.4.1\lib\net40\osr_csharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
