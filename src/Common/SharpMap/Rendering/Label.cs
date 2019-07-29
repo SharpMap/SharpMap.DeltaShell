@@ -16,7 +16,10 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.Drawing;
+using QuickGraph;
 using SharpMap.Api;
 
 
@@ -135,13 +138,11 @@ namespace SharpMap.Rendering
 		/// <returns>0 if the intersect</returns>
 		public int CompareTo(LabelBox other)
 		{
-			if (this.Intersects(other))
+			if (Intersects(other))
 				return 0;
-			else if (other.Left > this.Left+this.Width ||
-				other.Top - other.Height > this.Top)
+			if (other.Left > Right || other.Bottom > Top)
 				return 1;
-			else
-				return -1;
+			return -1;
 		}
 
 		#endregion
@@ -259,26 +260,49 @@ namespace SharpMap.Rendering
 		{
 			if (this == other)
 				return 0;
-			else if (box == null)
-				return -1;
-			else if (other.Box == null)
-				return 1;
-			else
-				return box.CompareTo(other.Box);
+			if (box == null)
+                return other.box == null
+                    ? ComparePoints(labelPoint, other.LabelPoint)
+                    : ComparePointToBox(labelPoint, other.Box);
+			if (other.Box == null)
+                return ComparePointToBox(other.LabelPoint, Box);
+			
+			return box.CompareTo(other.Box);
 		}
 
 		#endregion
 
-		
-		#region IComparer<Label> Members
+        private static int ComparePoints(PointF pt1, PointF pt2)
+        {
+            if (pt1 == pt2)
+                return 0;
 
-		/// <summary>
-		/// Checks if two labels intersect
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <returns></returns>
-		public int Compare(Label x, Label y)
+            int res = pt1.X.CompareTo(pt2.X);
+            if (res != 0) return res;
+            return pt1.Y.CompareTo(pt2.Y);
+        }
+        private static int ComparePointToBox(PointF pt, LabelBox box)
+        {
+            //if (box.Left <= pt.X && pt.X <= box.Right &&
+            //    box.Bottom <= pt.Y && pt.Y <= box.Top) return 0;
+
+            if (pt.X < box.Left) return -1;
+            if (pt.X > box.Right) return 1;
+            if (pt.Y < box.Bottom) return -1;
+            if (pt.Y > box.Top) return 1;
+
+            return 0;
+        }
+
+        #region IComparer<Label> Members
+
+        /// <summary>
+        /// Checks if two labels intersect
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public int Compare(Label x, Label y)
 		{
 			return x.CompareTo(y);
 		}

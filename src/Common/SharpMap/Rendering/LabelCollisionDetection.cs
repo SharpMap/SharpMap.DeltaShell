@@ -55,7 +55,10 @@ namespace SharpMap.Rendering
 		/// <param name="labels"></param>
 		public static void ThoroughCollisionDetection(List<SharpMap.Rendering.Label> labels)
 		{
-			labels.Sort(); // sort labels by intersectiontests of labelbox
+            try { 
+                labels.Sort(); // sort labels by intersectiontests of labelbox
+            }
+            finally{}
 			//remove labels that intersect other labels
 			for (int i = labels.Count - 1; i > 0; i--)
 				for (int j = i - 1; j > 0; j--)

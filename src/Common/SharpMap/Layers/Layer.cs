@@ -40,6 +40,7 @@ using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using log4net;
+using SharpMap.Utilities;
 
 namespace SharpMap.Layers
 {
@@ -455,7 +456,7 @@ namespace SharpMap.Layers
                     geometrys[i] = g;
                 }
 
-                var rectangleF = new RectangleF((float)envelope.MinX, (float)envelope.MinY, (float)envelope.Width, (float)envelope.Height);
+                var rectangleF = envelope.ToRectangleF(); //new RectangleF((float)envelope.MinX, (float)envelope.MinY, (float)envelope.Width, (float)envelope.Height);
 
                 tree = new QuadTree(rectangleF, maxLevels, isPoint);
 
@@ -499,7 +500,8 @@ namespace SharpMap.Layers
 
         private RectangleF ToRectangleF(Envelope envelope)
         {
-            return new RectangleF((float)envelope.MinX, (float)envelope.MinY, (float)envelope.Width, (float)envelope.Height);
+            return envelope.ToRectangleF();
+            //return new RectangleF((float)envelope.MinX, (float)envelope.MinY, (float)envelope.Width, (float)envelope.Height);
         }
 
         #region debugging

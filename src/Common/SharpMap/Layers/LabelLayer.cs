@@ -24,6 +24,7 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.Api.Delegates;
 using SharpMap.Api.Enums;
@@ -273,14 +274,23 @@ namespace SharpMap.Layers
 					else
 						style = Style;
 
-					float rotation = 0;
-			        if (!String.IsNullOrEmpty(RotationColumn))
-			            rotation = FeatureAttributeAccessorHelper.GetAttributeValue<float>(feature, RotationColumn, 0f);
+                    if (!style.Enabled || (map.Zoom < style.MinVisible || map.Zoom > style.MaxVisible))
+                        continue;
 
 				    string text = GetText(feature);
 
 					if (!string.IsNullOrEmpty(text))
 					{
+                        float rotation = 0;
+                        if (!String.IsNullOrEmpty(RotationColumn))
+                            rotation = FeatureAttributeAccessorHelper.GetAttributeValue<float>(feature, RotationColumn, 0f);
+
+                        // TODO: Add feature based
+                        //int priority = 0;
+                        //if (!String.IsNullOrEmpty(RotationColumn))
+                        //    rotation = FeatureAttributeAccessorHelper.GetAttributeValue<int>(feature, Priority, 0f);
+
+
                         if (geometry is IGeometryCollection)
 						{
 							if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.All)
@@ -463,12 +473,11 @@ namespace SharpMap.Layers
 		            return null;
 		        }
 
+                var res = DataSource.GetExtents();
                 if (CoordinateTransformation != null)
-                {
-                    throw new NotImplementedException();
-                }
+                    res = GeometryTransform.TransformBox(res, CoordinateTransformation.MathTransform);
 
-                return DataSource.GetExtents();
+                return res;
 		    }
 		}
 

@@ -349,6 +349,8 @@ namespace SharpMap.Styles
                 vectorStyle.UpdateSymbols();
             }
 
+            vectorStyle.Enabled = Enabled;
+
 	        return vectorStyle;
 	    }
 
