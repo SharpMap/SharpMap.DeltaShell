@@ -43,6 +43,7 @@ namespace SharpMap.UI.Tools
         public override void OnMouseMove(Coordinate worldPosition, MouseEventArgs e)
         {
             _toolTip.Active = false;
+            
             base.OnMouseMove(worldPosition, e);
         }
 

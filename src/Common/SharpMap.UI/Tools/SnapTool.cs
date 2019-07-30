@@ -126,11 +126,15 @@ namespace SharpMap.UI.Tools
         {
             var snapRules = sourceLayer.FeatureEditor.SnapRules;
 
+            var tmpLocation = sourceLayer.CoordinateTransformation == null
+                ? worldPosition
+                : sourceLayer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPosition);
+
             SnapResult = null;
             for (int i = 0; i < snapRules.Count; i++)
             {
                 ISnapRule rule = snapRules[i];
-                ExecuteSnapRule(rule, feature, geometry, null, worldPosition, trackerIndex);
+                ExecuteSnapRule(rule, feature, geometry, null, tmpLocation, trackerIndex);
                 if (null != SnapResult)
                     break;
                 // If snapping failed for the last rule and snapping is obligatory 
@@ -138,12 +142,12 @@ namespace SharpMap.UI.Tools
                 // todo add rule with SnapRole.Free?
                 if ((!rule.Obligatory) && (i == snapRules.Count - 1))
                 {
-                    SnapResult = new SnapResult(worldPosition, null, sourceLayer, null, -1, -1) { Rule = rule };
+                    SnapResult = new SnapResult(tmpLocation, null, sourceLayer, null, -1, -1) { Rule = rule };
                 }
             }
             if (0 == snapRules.Count)
             {
-                SnapResult = new SnapResult(worldPosition, null, sourceLayer, null, -1, -1);
+                SnapResult = new SnapResult(tmpLocation, null, sourceLayer, null, -1, -1);
             }
             return SnapResult;
         }

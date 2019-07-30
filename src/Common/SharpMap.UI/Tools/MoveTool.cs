@@ -340,12 +340,12 @@ namespace SharpMap.UI.Tools
             }     
             SnapResult = null;
             var selectedFeatureInteractor = MapControl.SelectTool.SelectedFeatureInteractors[0];
-            if (selectedFeatureInteractor.Layer.CoordinateTransformation != null)
-            {
-                var ct = selectedFeatureInteractor.Layer.CoordinateTransformation;
-                var ctRev = Map.CoordinateTransformationFactory.CreateFromCoordinateSystems(ct.TargetCS, ct.SourceCS);
-                worldPosition = ctRev.MathTransform.Transform(worldPosition);
-            }
+            //if (selectedFeatureInteractor.Layer.CoordinateTransformation != null)
+            //{
+            //    var ct = selectedFeatureInteractor.Layer.CoordinateTransformation;
+            //    var ctRev = Map.CoordinateTransformationFactory.CreateFromCoordinateSystems(ct.TargetCS, ct.SourceCS);
+            //    worldPosition = ctRev.MathTransform.Transform(worldPosition);
+            //}
 
             if (dragSource != null)
             {

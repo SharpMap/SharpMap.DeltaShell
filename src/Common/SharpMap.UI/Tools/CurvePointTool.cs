@@ -8,6 +8,8 @@ using SharpMap.Api;
 using SharpMap.Api.Editors;
 using SharpMap.Editors.Snapping;
 using GeoAPI.Extensions.Feature;
+using NetTopologySuite.CoordinateSystems.Transformations;
+using NetTopologySuite.Geometries;
 using SharpMap.UI.Helpers;
 
 namespace SharpMap.UI.Tools
@@ -51,11 +53,15 @@ namespace SharpMap.UI.Tools
         private void Snap(IGeometry snapSource, Coordinate worldPos)
         {
             SnapResult = null;
-            var sourceFeature = SelectTool.SelectedFeatureInteractors[0].SourceFeature;
+            var fi = SelectTool.SelectedFeatureInteractors[0];
+            var sourceFeature = fi.SourceFeature;
             if (!Equals(sourceFeature.Geometry, snapSource))
             {
                 return;
             }
+
+            //if (fi.Layer.CoordinateTransformation != null)
+            //    worldPos = fi.Layer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPos);
 
             SnapRole snapRole;
             if (Mode == EditMode.Add)

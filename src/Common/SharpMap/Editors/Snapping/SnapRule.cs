@@ -80,20 +80,25 @@ namespace SharpMap.Editors.Snapping
                     continue;
                 if (SnapRole == SnapRole.None) 
                     continue;
+
+                var tmpPosition = worldPos;
+                if (layer.CoordinateTransformation != null)
+                    tmpPosition = layer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPos);
+
                 if (geometry is IPolygon)
                 {
                     IPolygon polygon = (IPolygon)geometry;
                     switch (SnapRole)
                     {
                         case SnapRole.Free:
-                            PolygonSnapFree(ref minDistance, ref snapResult, polygon, worldPos);
+                            PolygonSnapFree(ref minDistance, ref snapResult, polygon, tmpPosition);
                             break;
                         case SnapRole.AllTrackers:
-                            GeometrySnapAllTrackers(ref minDistance, ref snapResult, polygon, worldPos);
+                            GeometrySnapAllTrackers(ref minDistance, ref snapResult, polygon, tmpPosition);
                             break;
                         default:
                             //case SnapRole.FreeAtObject:
-                            PolygonSnapFreeAtObject(ref minDistance, ref snapResult, polygon, worldPos);
+                            PolygonSnapFreeAtObject(ref minDistance, ref snapResult, polygon, tmpPosition);
                             break;
                     }
                 }
@@ -104,15 +109,15 @@ namespace SharpMap.Editors.Snapping
                     switch (SnapRole)
                     {
                         case SnapRole.Free:
-                            LineStringSnapFree(ref minDistance, ref snapResult, lineString, worldPos);
+                            LineStringSnapFree(ref minDistance, ref snapResult, lineString, tmpPosition);
                             break;
                         case SnapRole.FreeAtObject:
-                            LineStringSnapFreeAtObject(ref minDistance, ref snapResult, feature, lineString, worldPos);
+                            LineStringSnapFreeAtObject(ref minDistance, ref snapResult, feature, lineString, tmpPosition);
                             break;
                         case SnapRole.TrackersNoStartNoEnd:
                             break;
                         case SnapRole.AllTrackers:
-                            LineStringSnapAllTrackers(ref minDistance, ref snapResult, lineString, worldPos);
+                            LineStringSnapAllTrackers(ref minDistance, ref snapResult, lineString, tmpPosition);
                             break;
                         case SnapRole.Start:
                             LineStringSnapStart(ref snapResult, lineString);
@@ -121,7 +126,7 @@ namespace SharpMap.Editors.Snapping
                             LineStringSnapEnd(ref snapResult, lineString);
                             break;
                         case SnapRole.StartEnd:
-                            LineStringSnapStartEnd(ref minDistance, ref snapResult, lineString, worldPos);
+                            LineStringSnapStartEnd(ref minDistance, ref snapResult, lineString, tmpPosition);
                             break;
                     }
                 }

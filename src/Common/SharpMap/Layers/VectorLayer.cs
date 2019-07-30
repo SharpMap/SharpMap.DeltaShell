@@ -287,13 +287,20 @@ namespace SharpMap.Layers
             {
                 throw (new ApplicationException("DataSource property not set on layer '" + Name + "'"));
             }
+
+            bool selectable = IsSelectable;
             try
             {
+                Selectable = false;
                 RenderFeatures(g, envelope, map);
             }
             catch (Exception e)
             {
                 log.WarnFormat("Error during rendering: {0}", e.Message);
+            }
+            finally
+            {
+                Selectable = selectable;
             }
         }
 

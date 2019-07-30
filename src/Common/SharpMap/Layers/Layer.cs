@@ -992,6 +992,7 @@ namespace SharpMap.Layers
         protected bool themeIsDirty;
         private bool canBeRemovedByUser = true;
 
+        [NoNotifyPropertyChange]
         public virtual bool Selectable { get; set; }
 
         /// <summary>

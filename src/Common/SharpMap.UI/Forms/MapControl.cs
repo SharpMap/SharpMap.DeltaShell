@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -82,6 +83,8 @@ namespace SharpMap.UI.Forms
         private DelayedEventHandler<PropertyChangedEventArgs> mapPropertyChangedEventHandler;
         private IList<IFeature> selectedFeatures = new List<IFeature>();
         private Timer refreshTimer = new Timer() { Interval = 300 };
+        private Point _lastHoverPostiton;
+
 
         public void WaitUntilAllEventsAreProcessed()
         {
@@ -306,6 +309,14 @@ namespace SharpMap.UI.Forms
                 }
             }
         }
+
+        /// <summary>
+        /// Sets whether the mapcontrol should automatically grab focus when mouse is hovering the control
+        /// </summary>
+        [Description("Sets whether the mapcontrol should automatically grab focus when mouse is hovering the control")]
+        [DefaultValue(true)]
+        [Category("Behavior")]
+        public bool TakeFocusOnHover { get; set; } = true;
 
         /// <summary>
         /// Map reference
@@ -876,12 +887,45 @@ namespace SharpMap.UI.Forms
             base.OnKeyUp(e);
         }
 
+        /// <summary>
+        /// Private method to check if we need to reenable the <see cref="Control.MouseHover"/> event.
+        /// </summary>
+        /// <param name="position">The current position of the cursor</param>
+        private void CheckEnableHover(Point position)
+        {
+            var delta = new Size(position.X - _lastHoverPostiton.X,
+                position.Y - _lastHoverPostiton.Y);
+
+            if (Math.Abs(delta.Width) > SystemInformation.MouseHoverSize.Width ||
+                Math.Abs(delta.Height) > SystemInformation.MouseHoverSize.Height)
+            {
+                ResetMouseEventArgs();
+            }
+
+        }
+
         protected override void OnMouseHover(EventArgs e)
         {
-            var screenPt = PointToClient(MousePosition);
-            var worldPosition = map.ImageToWorld(screenPt);
-            WithActiveToolsDo(tool => tool.OnMouseHover(worldPosition, e));
             base.OnMouseHover(e);
+
+            if (TakeFocusOnHover)
+                TestAndGrabFocus();
+
+            var location = PointToClient(MousePosition);
+            Debug.WriteLine($"S:{MousePosition} M:{location}");
+
+            var worldPosition = map.ImageToWorld(location);
+            WithActiveToolsDo(tool => tool.OnMouseHover(worldPosition, e));
+            _lastHoverPostiton = location;
+        }
+
+        private void TestAndGrabFocus()
+        {
+            if (!Focused)
+            {
+                var isFocused = Focus();
+                //_.Debug("Focused: " + isFocused);
+            }
         }
 
         private void WithActiveToolsDo(Action<IMapTool> mapToolAction)
@@ -940,6 +984,8 @@ namespace SharpMap.UI.Forms
             var worldPosition = map.ImageToWorld(new Point(e.X, e.Y));
 
             WithActiveToolsDo(tool => tool.OnMouseMove(worldPosition, e));
+            CheckEnableHover(e.Location);
+
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -971,6 +1017,7 @@ namespace SharpMap.UI.Forms
             var worldPosition = map.ImageToWorld(new Point(e.X, e.Y));
 
             var contextMenu = new ContextMenuStrip();
+            contextMenu.MouseLeave += (sender, args) => contextMenu.Close();
 
             WithActiveToolsDo(tool =>
             {

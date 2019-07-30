@@ -154,7 +154,7 @@ namespace SharpMap.UI.Tools
                 }
             }
 
-            trackingLayer.CoordinateTransformation = null; //trackers[0].FeatureInteractor.Layer.CoordinateTransformation;
+            //trackingLayer.CoordinateTransformation = null; //trackers[0].FeatureInteractor.Layer.CoordinateTransformation;
             SynchronizeTrackers();
             trackingLayer.OnRender(graphics, map);
         }
