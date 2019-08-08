@@ -85,6 +85,9 @@ namespace SharpMap.UI.Forms
         private Timer refreshTimer = new Timer() { Interval = 300 };
         private Point _lastHoverPostiton;
 
+        private Point _cmLocation;
+        private ContextMenuStrip _cmStrip;
+
 
         public void WaitUntilAllEventsAreProcessed()
         {
@@ -983,6 +986,16 @@ namespace SharpMap.UI.Forms
 
             var worldPosition = map.ImageToWorld(new Point(e.X, e.Y));
 
+            if (_cmStrip != null)
+            {
+                if (Math.Abs(_cmLocation.X - e.X) > 5 || Math.Abs(_cmLocation.Y - e.Y) > 5)
+                {
+                    _cmLocation = Point.Empty;
+                    _cmStrip.Close();
+                    _cmStrip = null;
+                }
+            }
+
             WithActiveToolsDo(tool => tool.OnMouseMove(worldPosition, e));
             CheckEnableHover(e.Location);
 
@@ -1003,7 +1016,6 @@ namespace SharpMap.UI.Forms
             }
 
             var worldPosition = map.ImageToWorld(new Point(e.X, e.Y));
-
             WithActiveToolsDo(tool => tool.OnMouseDown(worldPosition, e));
         }
 
@@ -1017,8 +1029,7 @@ namespace SharpMap.UI.Forms
             var worldPosition = map.ImageToWorld(new Point(e.X, e.Y));
 
             var contextMenu = new ContextMenuStrip();
-            contextMenu.MouseLeave += (sender, args) => contextMenu.Close();
-
+            //contextMenu.MouseLeave += (sender, args) => contextMenu.Close();
             WithActiveToolsDo(tool =>
             {
                 tool.OnMouseUp(worldPosition, e);
@@ -1036,6 +1047,8 @@ namespace SharpMap.UI.Forms
                     item.Visible = true;
                 }
                 contextMenu.Show(PointToScreen(e.Location));
+                _cmLocation = e.Location;
+                _cmStrip = contextMenu;
             }
 
             //make sure the base event is fired first...HydroNetworkEditorMapTool enables the 
