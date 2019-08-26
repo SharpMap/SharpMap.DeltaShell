@@ -281,7 +281,8 @@ namespace SharpMap.UI.Tools
                     isBusy = false;
                     return;
                 }
-                dragSource = StartDragging(worldPosition, /*featureProvider.GetFeature(dragIndex) ??*/ (IFeature)feature.Clone());
+
+                dragSource = StartDragging(worldPosition, feature); //  featureProvider.GetFeature(dragIndex));
                 if (dragSource == null)
                 {
                     isBusy = false;

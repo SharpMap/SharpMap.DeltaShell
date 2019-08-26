@@ -970,6 +970,11 @@ namespace SharpMap.UI.Forms
             }
 
             var mousePosition = map.ImageToWorld(new Point(e.X, e.Y));
+            if (_cmStrip?.Visible ?? false)
+            {
+                _cmStrip.Close();
+                _cmStrip = null;
+            }
 
             WithActiveToolsDo(tool => tool.OnMouseWheel(mousePosition, e));
             base.OnMouseWheel(e);

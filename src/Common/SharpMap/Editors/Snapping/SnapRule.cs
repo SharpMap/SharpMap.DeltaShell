@@ -1,12 +1,11 @@
 using System;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Geometries;
 using System.Collections.Generic;
 using SharpMap.Api;
 using SharpMap.Api.Editors;
-using SharpMap.Layers;
+using SharpMap.CoordinateSystems.Transformations;
 
 namespace SharpMap.Editors.Snapping
 {
@@ -83,7 +82,8 @@ namespace SharpMap.Editors.Snapping
 
                 var tmpPosition = worldPos;
                 if (layer.CoordinateTransformation != null)
-                    tmpPosition = layer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPos);
+                    //tmpPosition = layer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPos);
+                    geometry = GeometryTransform.TransformGeometry(geometry, layer.CoordinateTransformation.MathTransform);
 
                 if (geometry is IPolygon)
                 {

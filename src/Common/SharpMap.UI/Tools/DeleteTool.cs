@@ -2,6 +2,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Properties;
 
 namespace SharpMap.UI.Tools
 {
@@ -24,6 +25,10 @@ namespace SharpMap.UI.Tools
                 return;
             }
 
+            if (MessageBox.Show(Properties.Resources.AskDeleteSelectionText, Properties.Resources.AskDeleteSelectionCaption,
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                return;
+
             DeleteSelection();
         }
 
@@ -45,8 +50,8 @@ namespace SharpMap.UI.Tools
             {
                 return;
             }
-            
-            var featuresDeleted = false;
+
+            bool featuresDeleted = false;
             var editableObject = MapControl.SelectTool.SelectedFeatureInteractors[0].EditableObject;
 
             var interactors = MapControl.SelectTool.SelectedFeatureInteractors.Where(featureMutator => featureMutator.AllowDeletion()).ToArray();

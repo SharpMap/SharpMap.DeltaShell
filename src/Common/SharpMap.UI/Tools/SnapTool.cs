@@ -154,7 +154,9 @@ namespace SharpMap.UI.Tools
 
         private void ShowSnapResult(SnapResult snapResult)
         {
-            ((DataTableFeatureProvider)snapLayer.DataSource).Clear();
+            var sld = ((DataTableFeatureProvider)snapLayer.DataSource);
+            sld.Clear();
+
             if (null == snapResult)
                 return;
             IList<IGeometry> visibleSnaps = snapResult.VisibleSnaps;
@@ -179,15 +181,15 @@ namespace SharpMap.UI.Tools
                 if (vertices.Count > 1)
                 {
                     ILineString snapLineString = GeometryFactory.CreateLineString(vertices.ToArray());
-                    ((DataTableFeatureProvider)snapLayer.DataSource).Add(snapLineString);
+                    sld.Add(snapLineString);
                 }
-                ((DataTableFeatureProvider)snapLayer.DataSource).Add(active);
+                sld.Add(active);
             }
             else
             {
                 foreach (var snap in visibleSnaps)
                 {
-                    ((DataTableFeatureProvider)snapLayer.DataSource).Add(snap);
+                    sld.Add(snap);
                 }
             }
         }

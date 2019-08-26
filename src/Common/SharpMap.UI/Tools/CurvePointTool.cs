@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
 using GeoAPI.Geometries;
@@ -10,6 +11,7 @@ using SharpMap.Editors.Snapping;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.CoordinateSystems.Transformations;
 using NetTopologySuite.Geometries;
+using SharpMap.Editors;
 using SharpMap.UI.Helpers;
 
 namespace SharpMap.UI.Tools
@@ -122,16 +124,30 @@ namespace SharpMap.UI.Tools
             {
                 SelectTool.OnMouseMove(worldPosition, e);
                 Snap(SelectTool.SelectedFeatureInteractors[0].SourceFeature.Geometry, worldPosition);
-                SetMouseCursor();
+                SetMouseCursor(worldPosition);
                 StartDrawing();
                 DoDrawing(true);
                 StopDrawing();
             }
         }
 
-        private void SetMouseCursor()
+        private void SetMouseCursor(Coordinate worldPosition)
         {
-            var cursor = SnapResult == null ? Cursors.Default : Mode == EditMode.Add ? MapCursors.AddPoint : MapCursors.RemovePoint;
+            //var cursor = SnapResult == null ? Cursors.Default : Mode == EditMode.Add ? MapCursors.AddPoint : MapCursors.RemovePoint;
+            var cursor = MapControl.Cursor;
+            if (SnapResult?.Location != null)
+            {
+                var fi = SelectTool.SelectedFeatureInteractors.FirstOrDefault();
+                if (fi != null)
+                {
+                    var tf = fi.GetTrackerAtCoordinate(SnapResult.Location);
+                    if (Mode == EditMode.Add && tf != null && tf.Index != -1)
+                        cursor = MapCursors.MovePoint;
+                    else
+                        cursor = Mode == EditMode.Add ? MapCursors.AddPoint : MapCursors.RemovePoint;
+                }
+            }
+
             if (!ReferenceEquals(MapControl.Cursor, cursor))
             {
                 MapControl.Cursor = cursor;

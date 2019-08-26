@@ -136,4 +136,10 @@
   <data name="AddFeatureTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\addfeaturetemplate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="AskDeleteSelectionCaption" xml:space="preserve">
+    <value>Delete features?</value>
+  </data>
+  <data name="AskDeleteSelectionText" xml:space="preserve">
+    <value>Do you really want to delete the selected features?</value>
+  </data>
 </root>

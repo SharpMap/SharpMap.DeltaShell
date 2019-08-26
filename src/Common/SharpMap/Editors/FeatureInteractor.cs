@@ -146,6 +146,8 @@ namespace SharpMap.Editors
         {
             Trackers.Insert(index, new TrackerFeature(this, new Point(coordinate), index, null));
 
+            if (Layer.CoordinateTransformation != null)
+                coordinate = Layer.CoordinateTransformation.MathTransform.Inverse().Transform(coordinate);
             TargetFeature.Geometry = GeometryHelper.InsertCurvePoint(TargetFeature.Geometry, coordinate, index);
             
             foreach (var topologyRule in FeatureRelationEditors)
@@ -262,7 +264,7 @@ namespace SharpMap.Editors
         /// <returns></returns>
         protected virtual bool AllowMoveCore()
         {
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -271,7 +273,7 @@ namespace SharpMap.Editors
         /// <returns></returns>
         protected virtual bool AllowDeletionCore()
         {
-            return false;
+            return true;
         }
 
         public bool AllowMove()

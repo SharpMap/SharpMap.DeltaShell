@@ -175,8 +175,9 @@ namespace SharpMap.UI.Tools
 
             TemporalEnd = false;
 
+            var dataSourcePosition = worldPosition;
             if (newLineLayer?.CoordinateTransformation != null)
-                worldPosition = newLineLayer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPosition);
+                dataSourcePosition = newLineLayer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPosition);
 
             if ((!adding))//|| (AutoCurve))
             {
@@ -204,8 +205,9 @@ namespace SharpMap.UI.Tools
                 return;
             }
 
+            var dataSourcePosition = worldPosition;
             if (VectorLayer.CoordinateTransformation != null)
-                worldPosition = VectorLayer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPosition);
+                dataSourcePosition = VectorLayer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPosition);
 
             // Execute snapping rules and show snap result, even when not in adding mode.
             if ((!adding) && (null != MapControl))
@@ -305,8 +307,9 @@ namespace SharpMap.UI.Tools
                 return;
             }
 
+            Coordinate dataSourcePosition = worldPosition;
             if (newLineLayer?.CoordinateTransformation != null)
-                worldPosition = newLineLayer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPosition);
+                dataSourcePosition = newLineLayer.CoordinateTransformation.MathTransform.Inverse().Transform(worldPosition);
 
             SnapResult snapResult = MapControl.SnapTool.ExecuteLayerSnapRules(VectorLayer, null, adding ? newLineGeometry[0] : null,
                                                             worldPosition,
@@ -538,7 +541,7 @@ namespace SharpMap.UI.Tools
 
             int featureCount = featureProvider.GetFeatureCount();
             var feature = featureCount > 0
-                                   ? featureProvider.GetFeature(featureCount - 1)
+                                   ? (IFeature)featureProvider.Features[featureCount - 1]
                                    : null;
 
             // hack? sourceLayer doesn't have to be part of a network; thus we are
